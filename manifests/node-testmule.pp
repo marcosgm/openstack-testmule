@@ -6,5 +6,6 @@ node default {
 	content => 'this is only a test\n',
     }
     include hypervisor
+    include topology1
 }
 

@@ -11,5 +11,16 @@ Have a fully virtual environment to test all of Openstack features, specially wi
 REQUIRES: 
 -Fedora 19 64 bits
 -Regular kernel with KVM (don't use OVH one)
--- do 'yum install kernel' and reboot
+-- do 'yum install kernel; grub2-mkconfig -o /boot/grub2/grub.cfg' and reboot
 -- or, you can follow this guide to install the default kernel 
+
+PUPPET REQUIREMENTS:
+(puppet 3 installed via 'yum install puppet')
+puppet module install carlasouza/virt
+puppet module install spiette/selinux
+puppet module install thias/libvirt
+puppet module install puppetlabs-stdlib
+
+FOREMAN
+yum -y install http://yum.theforeman.org/releases/1.3/f19/x86_64/foreman-release.rpm
+yum -y install foreman-installer
