@@ -21,6 +21,11 @@ puppet module install spiette/selinux
 puppet module install thias/libvirt
 puppet module install puppetlabs-stdlib
 
+APACHE PUPPET MODULE FIX (F19 bug)
+#puppet module install puppetlabs-apache
+#sed 's/^User /Include conf.modules.d\/*.conf\nUser /g' /etc/puppet/modules/apache/templates/httpd.conf.erb
+
+
 FOREMAN
 yum -y install http://yum.theforeman.org/releases/1.3/f19/x86_64/foreman-release.rpm
 yum -y install foreman-installer

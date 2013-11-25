@@ -1,12 +1,12 @@
 class hypervisor{
-	$basicpackages = ['vim-enhanced','puppet','git','screen','mlocate','lsof']
+	$basicpackages = ['vim-enhanced','puppet','git','screen','mlocate','lsof','etckeeper']
 	
 	package { $basicpackages: ensure => installed }
 
 	$hypervisorpackages = ['bridge-utils','kernel','qemu-kvm-tools','qemu-sanity-check'] #libvirt, qemu-kvm not necessary
 	
 	package { $hypervisorpackages: ensure => installed }
-	package { ['virt-manager','xorg-x11-xauth','dejavu-lgc-sans-fonts']: ensure => installed }
+	package { ['virt-manager','redhat-lsb','xorg-x11-xauth','dejavu-lgc-sans-fonts']: ensure => installed }
 
 
 	#SELINUX
@@ -14,6 +14,19 @@ class hypervisor{
 	  mode => 'disabled'
 	}
 	include hypervisor::libvirtconf
+	include hypervisor::firewall
+}
+
+class hypervisor::firewall{
+	package {["iptables-services","system-config-firewall-tui"]: ensure=> installed }
+	#service {'firewalld': 
+	#	enable => false,
+	#	ensure => stopped,
+	#}
+	#service {['iptables','iptables6']: 
+	#	enable => true,
+	#	ensure => running,
+	#}
 }
 
 class hypervisor::libvirtconf{
@@ -26,11 +39,17 @@ class hypervisor::libvirtconf{
 	class { 'libvirt':
 	  defaultnetwork => false, # This is the default
 	}
-	
+
 	libvirt::network { 'mule-ext':
    		ensure             => 'enabled',
    		autostart          => true,
    		forward_mode       => 'bridge',
-   		forward_dev        => 'br-ext',
+   		forward_dev        => 'muleNIC0',
+	}	
+	libvirt::network { 'mule-int':
+   		ensure             => 'enabled',
+   		autostart          => true,
+   		forward_mode       => 'bridge',
+   		forward_dev        => 'muleNIC1',
 	}
 }
