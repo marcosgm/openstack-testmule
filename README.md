@@ -20,6 +20,8 @@ puppet module install carlasouza/virt
 puppet module install spiette/selinux
 puppet module install thias/libvirt
 puppet module install puppetlabs-stdlib
+puppet module install razorsedge/network
+
 
 APACHE PUPPET MODULE FIX (F19 bug)
 #puppet module install puppetlabs-apache

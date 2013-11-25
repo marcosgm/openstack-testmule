@@ -15,6 +15,7 @@ class hypervisor{
 	}
 	include hypervisor::libvirtconf
 	include hypervisor::firewall
+	include hypervisor::network
 }
 
 class hypervisor::firewall{
@@ -51,5 +52,35 @@ class hypervisor::libvirtconf{
    		autostart          => true,
    		forward_mode       => 'bridge',
    		forward_dev        => 'muleNIC1',
+	}
+}
+
+class hypervisor::network {
+
+        network::bridge::static { 'mule-ext':
+	  ensure    => 'up',
+	  ipaddress => '192.168.1.1',
+	  netmask   => '255.255.255.0',
+	}
+	network::bridge::static { 'mule-int':
+	  ensure    => 'up',
+	  ipaddress => '172.20.1.1',
+	  netmask   => '255.255.255.0',
+	}
+	
+	file {'/etc/modprobe.d/dummy.conf':
+		content=>"	alias dummy0 muleNIC0
+			alias dummy1 muleNIC1
+			options dummy numdummies=2 \n",
+		mode=>664,
+	}
+	#a reboot is needed to create the dummy interfaces
+	network::if::bridge { 'muleNIC0':
+	  ensure => 'up',
+	  bridge => 'mule-ext'
+	}
+	network::if::bridge { 'muleNIC1':
+	  ensure => 'up',
+	  bridge => 'mule-int'
 	}
 }
