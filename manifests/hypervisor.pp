@@ -3,7 +3,7 @@ class hypervisor{
 	
 	package { $basicpackages: ensure => installed }
 
-	$hypervisorpackages = ['bridge-utils','kernel','qemu-kvm-tools','qemu-sanity-check'] #libvirt, qemu-kvm not necessary
+	$hypervisorpackages = ['bridge-utils','kernel','qemu-kvm-tools','qemu-sanity-check','virt-install','virt-viewer'] #libvirt, qemu-kvm not necessary
 	
 	package { $hypervisorpackages: ensure => installed }
 	package { ['virt-manager','redhat-lsb','xorg-x11-xauth','dejavu-lgc-sans-fonts']: ensure => installed }
@@ -16,6 +16,17 @@ class hypervisor{
 	include hypervisor::libvirtconf
 	include hypervisor::firewall
 	include hypervisor::network
+	include hypervisor::polipo
+}
+
+class hypervisor::polipo{
+	package {'polipo':
+		ensure => installed
+	}
+	service {'polipo':
+		enable => true,
+                ensure => running,
+	}
 }
 
 class hypervisor::firewall{
