@@ -48,14 +48,12 @@ class hypervisor::polipo{
 	}
 	service {'polipo':
                 ensure => running,
-        #        enable => true,
 	}
 }
 
 class hypervisor::firewall{
 	package {"system-config-firewall-tui": ensure=> installed }
 	service {"iptables": 
-		#enable => true,
 		ensure => running,
 	}
 }

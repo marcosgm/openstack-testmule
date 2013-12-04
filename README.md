@@ -25,7 +25,6 @@ puppet apply node-testmule.pp
 PUPPET REQUIREMENTS:
 puppet module install puppetlabs-apache
 puppet module install spiette/selinux
-puppet module install spiette/selinux
 puppet module install thias/libvirt
 puppet module install puppetlabs-stdlib
 puppet module install razorsedge/network
