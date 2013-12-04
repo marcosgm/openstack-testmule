@@ -89,26 +89,31 @@ class hypervisor::network {
 	  ensure    => 'up',
 	  ipaddress => '192.168.1.1',
 	  netmask   => '255.255.255.0',
+	  delay  => '0',
 	}
 	network::bridge::static { 'mule-int':
 	  ensure    => 'up',
 	  ipaddress => '172.20.1.1',
 	  netmask   => '255.255.255.0',
+	  delay  => '0',
 	}
+#	file {'/etc/modprobe.conf':
+#		content=>"dummy\n",
+#		mode=>664,
+#	}
 	
 	file {'/etc/modprobe.d/dummy.conf':
-		content=>"	alias dummy0 muleNIC0
-			alias dummy1 muleNIC1
-			options dummy numdummies=2 \n",
+		#content=>"alias dummy0 muleNIC0\nalias dummy1 muleNIC1\noptions dummy numdummies=2 \n",
+		content=>"options dummy numdummies=2 \n",
 		mode=>664,
 	}
 	#a reboot is needed to create the dummy interfaces
-	network::if::bridge { 'muleNIC0':
+	network::if::bridge { 'dummy0':
 	  ensure => 'up',
-	  bridge => 'mule-ext'
+	  bridge => 'mule-ext',
 	}
-	network::if::bridge { 'muleNIC1':
+	network::if::bridge { 'dummy1':
 	  ensure => 'up',
-	  bridge => 'mule-int'
+	  bridge => 'mule-int',
 	}
 }
