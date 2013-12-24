@@ -18,6 +18,8 @@ FIRST STEPS
 yum update
 rpm -ivh http://fedora.mirror.nexicom.net/epel/6/i386/epel-release-6-8.noarch.rpm
 yum install puppet git
+yum groupinstall development
+yum install libxslt-devel libxml2-devel libvirt-devel
 cd && git clone git@github.com:marcosgm/openstack-testmule.git
 cd openstack-testmule/manifests
 puppet apply node-testmule.pp
@@ -38,3 +40,9 @@ APACHE PUPPET MODULE FIX (F19 bug)
 FOREMAN
 yum -y install http://yum.theforeman.org/releases/1.3/f19/x86_64/foreman-release.rpm
 yum -y install foreman-installer
+
+
+PLAYING WITH VAGRANT-KVM
+rpm -ivh http://files.vagrantup.com/packages/a40522f5fabccb9ddabad03d836e120ff5d14093/vagrant_1.3.5_x86_64.rpm
+vagrant plugin install vagrant-kvm
+vagrant up --provider=kvm

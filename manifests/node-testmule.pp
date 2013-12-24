@@ -1,24 +1,43 @@
 node default {
     include hypervisor
     include webproxy
+    include netmanager
 }
 
+class netmanager {
+	class { 'dnsmasq':
+	  interface      => 'mule-ext', #very important, to avoid dhcp on external interfaces
+	  listen_address => '192.168.1.1',
+	  domain         => 'testmule.moo.com',
+	  port           => '53',
+	  expand_hosts   => true,
+	  enable_tftp    => false,
+	  domain_needed  => true,
+	  resolv_file    => '/etc/resolv.conf',
+	  cache_size     => 1000
+	}
+	dnsmasq::dhcp { 'dhcp': 
+	  dhcp_start => '192.168.1.100',
+	  dhcp_end   => '192.168.1.200',
+	  netmask    => '255.255.255.0',
+	  lease_time => '24h'
+	}
+	dnsmasq::dhcpstatic { 'controller':
+ 	   mac => 'AA:AA:AA:AA:00:F1',
+	   ip  => '192.168.1.254',
+	}
+}
 
 class webproxy {
     class { 'apache':  
               default_mods => true,
               default_vhost => false,
     }
-  include apache::mod::proxy                                                                                                                                                                     
-
-  apache::vhost { 'vm-foreman.mooo.com':
-      port    => '443',
-      ssl     => true,
-      docroot => '/var/www/html',
-      proxy_pass => [
-         { path => '/', url => 'https://192.168.1.2' },
-      ]
-  }
+    include apache::mod::proxy                                                                                                                                                                     
+    apache::vhost { 'testmule.mooo.com':
+      port    => '80',
+      docroot => '/var/www/',
+    }
 }
 
 class hypervisor{
@@ -73,13 +92,13 @@ class hypervisor::libvirtconf{
    		ensure             => 'enabled',
    		autostart          => true,
    		forward_mode       => 'bridge',
-   		forward_dev        => 'muleNIC0',
+   		forward_dev        => 'dummy0',
 	}	
 	libvirt::network { 'mule-int':
    		ensure             => 'enabled',
    		autostart          => true,
    		forward_mode       => 'bridge',
-   		forward_dev        => 'muleNIC1',
+   		forward_dev        => 'dummy1',
 	}
 }
 
@@ -115,5 +134,8 @@ class hypervisor::network {
 	network::if::bridge { 'dummy1':
 	  ensure => 'up',
 	  bridge => 'mule-int',
+	}
+	host {'testmule.mooo.com':
+		ip => '127.0.0.1'
 	}
 }
