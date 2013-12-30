@@ -46,3 +46,24 @@ PLAYING WITH VAGRANT-KVM
 rpm -ivh http://files.vagrantup.com/packages/a40522f5fabccb9ddabad03d836e120ff5d14093/vagrant_1.3.5_x86_64.rpm
 vagrant plugin install vagrant-kvm
 vagrant up --provider=kvm
+
+
+CREATING THE VM's
+
+==Storage pool directory==
+Create a new partition, undefine the 'default' one, so there is only one pool available
+
+==Golden image==
+Install centos in a VM named 'baseVM'
+execute: virt-sysprep -d baseVM
+
+==Cloning VMs==
+
+virt-clone \
+     --connect qemu:///system \
+     --original baseVM \
+     --name controller \
+     --file /mnt/images/controller \
+     --mac AA:AA:AA:AA:00:F1
+
+(same for the other VM's)

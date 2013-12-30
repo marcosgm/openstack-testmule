@@ -18,13 +18,25 @@ class netmanager {
 	}
 	dnsmasq::dhcp { 'dhcp': 
 	  dhcp_start => '192.168.1.100',
-	  dhcp_end   => '192.168.1.200',
+	  dhcp_end   => '192.168.1.254',
 	  netmask    => '255.255.255.0',
 	  lease_time => '24h'
 	}
 	dnsmasq::dhcpstatic { 'controller':
  	   mac => 'AA:AA:AA:AA:00:F1',
 	   ip  => '192.168.1.254',
+	}
+	dnsmasq::dhcpstatic { 'compute1':
+ 	   mac => 'AA:AA:AA:AA:00:C1',
+	   ip  => '192.168.1.241',
+	}
+	dnsmasq::dhcpstatic { 'compute2':
+ 	   mac => 'AA:AA:AA:AA:00:C2',
+	   ip  => '192.168.1.242',
+	}
+	dnsmasq::dhcpstatic { 'compute3':
+ 	   mac => 'AA:AA:AA:AA:00:C3',
+	   ip  => '192.168.1.243',
 	}
 }
 
@@ -34,9 +46,13 @@ class webproxy {
               default_vhost => false,
     }
     include apache::mod::proxy                                                                                                                                                                     
+    $proxy_pass = [
+      { 'path' => '/controller', 'url' => 'http://192.168.1.254/' },
+    ]
     apache::vhost { 'testmule.mooo.com':
       port    => '80',
       docroot => '/var/www/',
+      proxy_pass => $proxy_pass, 
     }
 }
 
