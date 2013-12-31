@@ -1,0 +1,8 @@
+virt-clone      --connect qemu:///system      --original baseVM      --name compute3      --file=/mnt/images/compute3      --mac AA:AA:AA:AA:00:C3
+
+AFTER CLONATION
+
+Change CPU and memory using virt-manage
+Once booted up, change networking in /etc/sysconfig/network-scripts
+Once booted up, change hostname in /etc/sysconfig/network
+

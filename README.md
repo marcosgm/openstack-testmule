@@ -67,3 +67,22 @@ virt-clone \
      --mac AA:AA:AA:AA:00:F1
 
 (same for the other VM's)
+
+
+USING OPENSTACK FOR THE FIRST TIME
+ssh 192.168.1.254 for reading the credentials
+
+Login into http://controller.testmule.mooo.com/dashboard
+
+Everything should work OK, but is empty
+
+== Import OS images into glance ==
+(logged into the controller 192.168.1.254)
+glance image-create --name 'Fedora 20 x86_64' --disk-format qcow2 --container-format bare --is-public true --copy-from http://cloud.fedoraproject.org/fedora-20.x86_64.qcow2
+
+wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img 
+glance image-create --name='cirros image' --is-public=true --container-format=bare --disk-format=qcow2 < cirros-0.3.0-x86_64-disk.img
+
+
+== ENABLE NESTED KVM in Centos ==
+http://wiki.centos.org/HowTos/NestedVirt

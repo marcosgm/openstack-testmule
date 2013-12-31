@@ -1,0 +1,14 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE 
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh net-edit mule-int
+or other application using the libvirt API.
+-->
+
+<network>
+  <name>mule-int</name>
+  <uuid>333ed4d4-0f80-5bbe-cbea-6e3805d61efc</uuid>
+  <forward dev='dummy1' mode='bridge'>
+    <interface dev='dummy1'/>
+  </forward>
+</network>

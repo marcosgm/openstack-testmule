@@ -1,0 +1,14 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE 
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh net-edit mule-ext
+or other application using the libvirt API.
+-->
+
+<network>
+  <name>mule-ext</name>
+  <uuid>e6f10f76-18e5-bed5-c570-ae308f4f6014</uuid>
+  <forward dev='dummy0' mode='bridge'>
+    <interface dev='dummy0'/>
+  </forward>
+</network>

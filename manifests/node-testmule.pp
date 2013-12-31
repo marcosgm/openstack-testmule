@@ -42,14 +42,15 @@ class netmanager {
 
 class webproxy {
     class { 'apache':  
-              default_mods => true,
+              default_mods => false,
               default_vhost => false,
     }
-    include apache::mod::proxy                                                                                                                                                                     
+    include apache::mod::proxy
+    include apache::mod::proxy_http
     $proxy_pass = [
-      { 'path' => '/controller', 'url' => 'http://192.168.1.254/' },
+      { 'path' => '/', 'url' => 'http://192.168.1.254/' },
     ]
-    apache::vhost { 'testmule.mooo.com':
+    apache::vhost { 'controller.testmule.mooo.com':
       port    => '80',
       docroot => '/var/www/',
       proxy_pass => $proxy_pass, 
@@ -66,7 +67,11 @@ class hypervisor{
 	package { $hypervisorpackages: ensure => installed }
 	package { ['virt-manager','redhat-lsb','xorg-x11-xauth','dejavu-lgc-sans-fonts']: ensure => installed }
 
-
+	#nested KVM, needs a reboot after applied
+	file {'/etc/modprobe.d/kvm-intel.conf':
+		content=>"options kvm-intel nested=y"
+	}
+	
 	#SELINUX
 	class { 'selinux':
 	  mode => 'disabled'
