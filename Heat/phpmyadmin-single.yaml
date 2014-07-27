@@ -48,7 +48,7 @@ resources:
             EXIT
             EOF
             yum -y install phpmyadmin
-            sed 's/127.0.0.1/192.168./g' phpMyAdmin.conf  -i
+            sed 's/127.0.0.1/192.168./g' /etc/httpd/conf/phpMyAdmin.conf  -i
             systemctl start httpd
           params:
             $db_rootpassword: {get_param: database_root_password}
