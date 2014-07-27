@@ -42,7 +42,7 @@ resources:
             mysqladmin -u root password $db_rootpassword
             cat << EOF | mysql -u root --password=$db_rootpassword
             CREATE DATABASE $db_name;
-            GRANT ALL PRIVILEGES ON $db_name.* TO "$root”@“%”
+            GRANT ALL PRIVILEGES ON $db_name.* TO "root”@“%”
             IDENTIFIED BY "$db_rootpassword";
             FLUSH PRIVILEGES;
             EXIT
