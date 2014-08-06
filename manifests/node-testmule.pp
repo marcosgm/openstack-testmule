@@ -1,6 +1,6 @@
 node default {
     include hypervisor
-    include webproxy
+#    include webproxy
     include netmanager
 }
 
@@ -121,6 +121,25 @@ class hypervisor::libvirtconf{
    		forward_mode       => 'bridge',
    		forward_dev        => 'dummy1',
 	}
+	libvirt::network { 'lan1':
+   		ensure             => 'enabled',
+   		autostart          => true,
+   		forward_mode       => 'bridge',
+   		forward_dev        => 'dummy2',
+	}	
+	libvirt::network { 'lan2':
+   		ensure             => 'enabled',
+   		autostart          => true,
+   		forward_mode       => 'bridge',
+   		forward_dev        => 'dummy3',
+	}
+	libvirt::network { 'lan3':
+   		ensure             => 'enabled',
+   		autostart          => true,
+   		forward_mode       => 'bridge',
+   		forward_dev        => 'dummy4',
+	}
+
 }
 
 class hypervisor::network {
@@ -134,6 +153,24 @@ class hypervisor::network {
 	network::bridge::static { 'mule-int':
 	  ensure    => 'up',
 	  ipaddress => '172.20.1.1',
+	  netmask   => '255.255.255.0',
+	  delay  => '0',
+	}
+	network::bridge::static { 'lan1':
+	  ensure    => 'up',
+	  ipaddress => '172.30.1.1',
+	  netmask   => '255.255.255.0',
+	  delay  => '0',
+	}
+	network::bridge::static { 'lan2':
+	  ensure    => 'up',
+	  ipaddress => '172.30.2.1',
+	  netmask   => '255.255.255.0',
+	  delay  => '0',
+	}
+	network::bridge::static { 'lan3':
+	  ensure    => 'up',
+	  ipaddress => '172.30.3.1',
 	  netmask   => '255.255.255.0',
 	  delay  => '0',
 	}
@@ -156,6 +193,19 @@ class hypervisor::network {
 	  ensure => 'up',
 	  bridge => 'mule-int',
 	}
+	network::if::bridge { 'dummy2':
+	  ensure => 'up',
+	  bridge => 'lan1',
+	}
+	network::if::bridge { 'dummy3':
+	  ensure => 'up',
+	  bridge => 'lan2',
+	}
+	network::if::bridge { 'dummy4':
+	  ensure => 'up',
+	  bridge => 'lan3',
+	}
+
 	host {'testmule.mooo.com':
 		ip => '127.0.0.1'
 	}
