@@ -8,7 +8,7 @@ class netmanager {
 	class { 'dnsmasq':
 	  interface      => 'mule-ext', #very important, to avoid dhcp on external interfaces
 	  listen_address => '192.168.1.1',
-	  domain         => 'testmule.moo.com',
+	  domain         => 'testmule.mooo.com',
 	  port           => '53',
 	  expand_hosts   => true,
 	  enable_tftp    => false,
