@@ -1,0 +1,56 @@
+heat_template_version: 2013-05-23
+
+description: Simple template to deploy a single PhpMyAdmin instance, managed from any IP
+
+parameters:
+  image:
+    type: string
+    description: Image used for server
+    default: fedora-20
+  key:
+    type: string
+    description: SSH key to connect to the server
+    default: adminKP
+  flavor:
+    type: string
+    description: flavor used by the server
+    default: m1.small
+  database_name:
+    type: string
+    description: Name of the mysql DB
+    default: phpmyadminTest
+  database_root_password:
+    type: string
+    description: Password of the mysql root user
+    default: phpmyadmin
+
+resources:
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      flavor: {get_param: flavor}
+      image: {get_param: image}
+      key_name: {get_param: key}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash -v
+            yum -y install mariadb mariadb-server
+            systemctl enable mariadb.service
+            systemctl start mariadb.service
+            mysqladmin -u root password $db_rootpassword
+            cat << EOF | mysql -u root --password=$db_rootpassword
+            CREATE DATABASE $db_name;
+            GRANT ALL PRIVILEGES ON $db_name.* TO "root”@“%”
+            IDENTIFIED BY "$db_rootpassword";
+            FLUSH PRIVILEGES;
+            EXIT
+            EOF
+            yum -y install phpmyadmin
+            sed 's/Require ip 127.0.0.1/Require all granted/g' /etc/httpd/conf.d/phpMyAdmin.conf  -i
+            systemctl start httpd
+          params:
+            $db_rootpassword: {get_param: database_root_password}
+            $db_name: {get_param: database_name}
+
